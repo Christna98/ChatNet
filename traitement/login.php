@@ -25,7 +25,7 @@ if (!$user) {
 }
 
 // Mettre à jour le statut de l'utilisateur à "connected"
-if (!$userController->updateUserStatus($user->id, "connected")) {
+if (!$userController->updateUserStatus($user->id, true)) {
     header("Location: ../pages/login.php?error=status_update_failed");
     exit();
 }

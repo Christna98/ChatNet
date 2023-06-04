@@ -18,9 +18,14 @@ class ConversationController
 
     public function getConversationsByUserId(int $userId)
     {
-        $query = "SELECT c.* FROM conversations c
+        $query = "SELECT c.*, MAX(m.timestamp) AS newestMessageTimestamp
+              FROM conversations c
               INNER JOIN conversationmembers cm ON c.id = cm.conversationId
-              WHERE cm.userId = :userId";
+              INNER JOIN messages m ON c.id = m.conversationId
+              WHERE cm.userId = :userId
+              GROUP BY c.id
+              ORDER BY newestMessageTimestamp DESC, c.createdAt DESC";
+
         $stmt = $this->connection->prepare($query);
         $stmt->execute([
             "userId" => $userId
@@ -29,9 +34,20 @@ class ConversationController
         return $stmt->fetchAll();
     }
 
+    public function getConversationById(int $id)
+    {
+        $query = "SELECT * FROM conversations WHERE id = :id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([
+            "id" => $id
+        ]);
+
+        return $stmt->fetch();
+    }
+
     public function createConversation(string $conversationName)
     {
-        $query = "INSERT INTO conversations (conversationName) VALUES (:conversationName)";
+        $query = "INSERT INTO conversations (name) VALUES (:conversationName)";
         $stmt = $this->connection->prepare($query);
         $stmt->execute([
             "conversationName" => $conversationName

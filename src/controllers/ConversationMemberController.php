@@ -29,6 +29,26 @@ class ConversationMemberController
         return $stmt->fetchAll();
     }
 
+    public function getOtherMemberOfConversationByUserId(int $userId, int $conversationId)
+    {
+        // Requête pour sélectionner les informations de l'autre membre de la conversation
+        $query = "SELECT u.* FROM users u
+    INNER JOIN conversationmembers cm ON u.id != :userId
+    WHERE cm.conversationId = :conversationId";
+
+        // Préparation de la requête
+        $stmt = $this->connection->prepare($query);
+
+        // Exécution de la requête avec les valeurs des paramètres
+        $stmt->execute([
+            "userId" => $userId,
+            "conversationId" => $conversationId
+        ]);
+
+        // Récupération du résultat (un seul enregistrement)
+        return $stmt->fetch();
+    }
+
 
     public function addMemberToConversation(int $conversationId, int $userId)
     {

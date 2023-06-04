@@ -35,7 +35,7 @@ module.exports = {
       "lemonade",
       "night",
       "coffee",
-      "winter",
-    ],
-  },
+      "winter"
+    ]
+  }
 };

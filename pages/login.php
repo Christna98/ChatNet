@@ -12,7 +12,7 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="garden">
 
 <head>
     <meta charset="UTF-8">
@@ -23,8 +23,11 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
 </head>
 
 <body>
-    <nav class="navbar flex justify-between bg-neutral text-neutral-content">
-        <h1 class="font-bold text-2xl">ChatNet</h1>
+    <nav class="navbar flex justify-between">
+        <a href="/" class="flex font-bold text-2xl">
+            <span class="text-accent">Chat</span>
+            <span>Net</span>
+        </a>
 
         <ul class="flex gap-4">
             <li>
@@ -37,6 +40,10 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
     </nav>
 
     <main class="flex flex-col justify-center items-center">
+
+        <?php if (isset($_GET["error"])) : ?>
+            <p class="text-error text-lg mt-8"><?= $_GET["error"]; ?></p>
+        <?php endif; ?>
 
         <h2 class="text-2xl my-8">Login To Your Account</h2>
 
@@ -54,7 +61,7 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
                 </label>
             </div>
 
-            <button type="submit" class="btn btn-active btn-neutral">Login</button>
+            <button type="submit" class="btn btn-active btn-primary">Login</button>
         </form>
     </main>
 </body>

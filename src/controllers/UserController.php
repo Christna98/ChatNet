@@ -16,12 +16,30 @@ class UserController
         $this->connection = $this->database->getConnection();
     }
 
-    public function getUsers()
+    public function getUsers(int $currentUserId)
     {
-        $query = "SELECT * FROM users";
-        $stmt = $this->connection->query($query);
+        $query = "SELECT u.*
+              FROM users u
+              WHERE u.id != :currentUserId
+              AND u.id NOT IN (
+                SELECT cm.userId
+                FROM conversationmembers cm
+                INNER JOIN conversations c ON cm.conversationId = c.id
+                WHERE cm.conversationId IN (
+                  SELECT cm.conversationId
+                  FROM conversationmembers cm
+                  WHERE cm.userId = :currentUserId
+                )
+              )
+              ORDER BY u.status DESC";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([
+            "currentUserId" => $currentUserId
+        ]);
+
         return $stmt->fetchAll();
     }
+
 
     public function getUserById(int $id)
     {
@@ -57,7 +75,7 @@ class UserController
         return $stmt->fetch();
     }
 
-    public function createUser(string $userName, string $password, string $connected = "connected")
+    public function createUser(string $userName, string $password, bool $connected = true)
     {
         $query = "INSERT INTO users (userName, password, status) VALUES (:userName, :password, :status)";
         $stmt = $this->connection->prepare($query);
@@ -75,7 +93,7 @@ class UserController
         $query = "UPDATE users SET status = :status WHERE id = :id";
         $stmt = $this->connection->prepare($query);
         $stmt->execute([
-            "status" => $status,
+            "status" => boolval($status) ? 1 : 0,
             "id" => $id
         ]);
 

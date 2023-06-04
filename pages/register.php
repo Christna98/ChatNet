@@ -2,9 +2,7 @@
 
 session_start();
 
-// $_SESSION["CurrentUser"] = [];
-
-if (array_key_exists("CurrentUser", $_SESSION)) {
+if (isset($_SESSION["ConnectedUser"])) {
     header("location: ../index.php", true);
     exit();
 }
@@ -12,7 +10,7 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="garden">
 
 <head>
     <meta charset="UTF-8">
@@ -24,7 +22,10 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
 
 <body>
     <nav class="navbar flex justify-between">
-        <h1 class="text-2xl">ChatNet</h1>
+        <a href="/" class="flex font-bold text-2xl">
+            <span class="text-accent">Chat</span>
+            <span>Net</span>
+        </a>
 
         <ul class="flex gap-4">
             <li>
@@ -37,6 +38,10 @@ if (array_key_exists("CurrentUser", $_SESSION)) {
     </nav>
 
     <main class="flex flex-col justify-center items-center">
+
+        <?php if (isset($_GET["error"])) : ?>
+            <p class="text-error text-lg mt-8"><?= $_GET["error"]; ?></p>
+        <?php endif; ?>
 
         <h2 class="text-2xl my-8">Create An Account</h2>
 

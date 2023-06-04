@@ -40,7 +40,7 @@ if (!$userCreated) {
 
 // Démarrer une session et stocker l'utilisateur dans la session
 session_start();
-$_SESSION["CurrentUser"] = $userCreated;
+$_SESSION["ConnectedUser"] = $userCreated;
 
 // Rediriger vers la page d'accueil
 header("Location: ../index.php");

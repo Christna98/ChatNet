@@ -10,7 +10,7 @@ if (isset($_POST["id"])) {
 
     extract($_POST);
 
-    $rowCount = $userController->connectAndDisconnectUser($id, "disconnected");
+    $rowCount = $userController->updateUserStatus($id, false);
 
     if ($rowCount > 0) {
         session_start();
