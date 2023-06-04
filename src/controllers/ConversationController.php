@@ -28,4 +28,15 @@ class ConversationController
 
         return $stmt->fetchAll();
     }
+
+    public function createConversation(string $conversationName)
+    {
+        $query = "INSERT INTO conversations (conversationName) VALUES (:conversationName)";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([
+            "conversationName" => $conversationName
+        ]);
+
+        return $this->connection->lastInsertId();
+    }
 }
